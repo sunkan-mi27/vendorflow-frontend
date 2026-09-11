@@ -1,10 +1,9 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://localhost:4000/api", // your backend's address
+  baseURL: " https://vendorflow-backend-6nuy.onrender.com/api",
 });
 
-// This runs before every request — it grabs the saved token and attaches it
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
   if (token) {
