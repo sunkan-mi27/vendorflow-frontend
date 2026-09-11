@@ -120,44 +120,42 @@ function Dashboard() {
         </div>
       )}
 
-      {
-        !showUpgrade(
-          <form className="order-form" onSubmit={handleSubmit}>
-            <input
-              name="customerName"
-              placeholder="Customer name"
-              value={form.customerName}
-              onChange={handleChange}
-              required
-            />
-            <input
-              name="customerPhone"
-              placeholder="Phone (2348...)"
-              value={form.customerPhone}
-              onChange={handleChange}
-              required
-            />
-            <input
-              name="item"
-              placeholder="Item"
-              value={form.item}
-              onChange={handleChange}
-              required
-            />
-            <input
-              name="amount"
-              type="number"
-              placeholder="Amount"
-              value={form.amount}
-              onChange={handleChange}
-              required
-            />
-            <button className="btn-primary" type="submit">
-              Add order
-            </button>
-          </form>,
-        )
-      }
+      {!showUpgrade && (
+        <form className="order-form" onSubmit={handleSubmit}>
+          <input
+            name="customerName"
+            placeholder="Customer name"
+            value={form.customerName}
+            onChange={handleChange}
+            required
+          />
+          <input
+            name="customerPhone"
+            placeholder="Phone (2348...)"
+            value={form.customerPhone}
+            onChange={handleChange}
+            required
+          />
+          <input
+            name="item"
+            placeholder="Item"
+            value={form.item}
+            onChange={handleChange}
+            required
+          />
+          <input
+            name="amount"
+            type="number"
+            placeholder="Amount"
+            value={form.amount}
+            onChange={handleChange}
+            required
+          />
+          <button className="btn-primary" type="submit">
+            Add order
+          </button>
+        </form>
+      )}
 
       {orders.length === 0 ? (
         <div className="empty-state">
