@@ -42,7 +42,9 @@ function Dashboard() {
     onError: (error) => {
       if (error?.response?.data?.code === "UPGRADE_REQUIRED") {
         setShowUpgrade(true);
-      }z
+      }
+    },
+  });
 
   const updateStatusMutation = useMutation({
     mutationFn: ({ id, status }) => api.patch(`/orders/${id}`, { status }),
