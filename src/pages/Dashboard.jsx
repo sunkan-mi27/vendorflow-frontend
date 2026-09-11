@@ -61,6 +61,34 @@ function Dashboard() {
     addOrderMutation.mutate(form);
   };
 
+  const handleUpgrade = () => {
+    const email = localStorage.getItem("vendorEmail");
+
+    const handler = window.PaystackPop.setup({
+      key: "pk_test_f1eae695bf442c9dffff788d12aba0789f4134d6",
+      email: email,
+      amount: 250000,
+      currency: "NGN",
+      callback: function (response) {
+        api
+          .post("/payments/verify", { reference: response.reference })
+          .then(() => {
+            setShowUpgrade(false);
+            queryClient.invalidateQueries({ queryKey: ["orders"] });
+            alert("Payment successful! You can now add unlimited orders.");
+          })
+          .catch(() => {
+            alert("Payment verification failed. Please contact support.");
+          });
+      },
+      onClose: function () {
+        console.log("Payment window closed");
+      },
+    });
+
+    handler.openIframe();
+  };
+
   if (isLoading) return <p style={{ padding: 40 }}>Loading orders...</p>;
   if (isError)
     return <p style={{ padding: 40 }}>Something went wrong fetching orders.</p>;
@@ -198,11 +226,8 @@ function Dashboard() {
             You've used your 3 free orders. Upgrade to keep tracking unlimited
             orders.
           </p>
-          <button
-            className="btn-primary"
-            onClick={() => alert("Payment coming next!")}
-          >
-            Upgrade now
+          <button className="btn-primary" onClick={handleUpgrade}>
+            Upgrade now ⇢ ₦2,500/month
           </button>
         </div>
       )}
