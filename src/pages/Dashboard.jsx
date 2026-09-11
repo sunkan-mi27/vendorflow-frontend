@@ -40,11 +40,9 @@ function Dashboard() {
       setForm({ customerName: "", customerPhone: "", item: "", amount: "" });
     },
     onError: (error) => {
-      if (error?.response?.code === "UPGRADE_REQUIRED") {
+      if (error?.response?.data?.code === "UPGRADE_REQUIRED") {
         setShowUpgrade(true);
-      }
-    },
-  });
+      }z
 
   const updateStatusMutation = useMutation({
     mutationFn: ({ id, status }) => api.patch(`/orders/${id}`, { status }),
