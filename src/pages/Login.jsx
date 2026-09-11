@@ -12,6 +12,7 @@ function Login() {
     mutationFn: (credentials) => api.post("/auth/login", credentials),
     onSuccess: (response) => {
       localStorage.setItem("token", response.data.token);
+      localStorage.setItem("vendorEmail", response.data.vendor.email);
       navigate("/dashboard");
     },
   });

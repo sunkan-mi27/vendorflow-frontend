@@ -15,6 +15,7 @@ function Register() {
     mutationFn: (data) => api.post("/auth/register", data),
     onSuccess: (response) => {
       localStorage.setItem("token", response.data.token);
+      localStorage.setItem("vendorEmail", response.data.vendor.email);
       navigate("/dashboard");
     },
   });
