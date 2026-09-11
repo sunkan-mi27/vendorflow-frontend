@@ -336,3 +336,19 @@ input[type="number"] {
   align-items: flex-start;
   gap: 16px;
 }
+
+.upgrade-banner {
+  background: var(--pending-bg);
+  border: 1px solid var(--pending);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  margin-top: 20px;
+  text-align: center;
+}
+
+.upgrade-banner p {
+  margin: 0 0 12px;
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 500;
+}

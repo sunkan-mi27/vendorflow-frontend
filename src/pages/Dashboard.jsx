@@ -10,6 +10,7 @@ function Dashboard() {
     localStorage.removeItem("token");
     navigate("/login");
   };
+  const [showUpgrade, setShowUpgrade] = useState(false);
   const [form, setForm] = useState({
     customerName: "",
     customerPhone: "",
@@ -37,6 +38,11 @@ function Dashboard() {
       queryClient.invalidateQueries({ queryKey: ["orders"] });
       queryClient.invalidateQueries({ queryKey: ["summary"] });
       setForm({ customerName: "", customerPhone: "", item: "", amount: "" });
+    },
+    onError: (error) => {
+      if (error?.response?.code === "UPGRADE_REQUIRED") {
+        setShowUpgrade(true);
+      }
     },
   });
 
@@ -179,6 +185,21 @@ function Dashboard() {
               </div>
             </div>
           ))}
+        </div>
+      )}
+
+      {showUpgrade && (
+        <div className="upgrade-banner">
+          <p>
+            You've used your 3 free orders. Upgrade to keep tracking unlimited
+            orders.
+          </p>
+          <button
+            className="btn-primary"
+            onClick={() => alert("Payment coming next!")}
+          >
+            Upgrade now
+          </button>
         </div>
       )}
     </div>
