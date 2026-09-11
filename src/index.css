@@ -50,24 +50,44 @@ body {
 
 .summary-strip {
   display: flex;
-  gap: 32px;
-  background: var(--surface);
-  border: 1px solid var(--border);
+  background: var(--ink);
   border-radius: var(--radius);
-  padding: 20px 24px;
+  padding: 22px 26px;
   margin-bottom: 28px;
+  color: white;
+}
+
+.summary-item {
+  flex: 1;
+  position: relative;
+}
+
+.summary-item:not(:last-child) {
+  padding-right: 24px;
+  margin-right: 24px;
+}
+
+.summary-item:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 2px;
+  bottom: 2px;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.15);
 }
 
 .summary-item .value {
-  font-size: 24px;
+  font-size: 26px;
   font-weight: 700;
   line-height: 1.1;
+  letter-spacing: -0.01em;
 }
 
 .summary-item .label {
-  font-size: 13px;
-  color: var(--ink-soft);
-  margin-top: 2px;
+  font-size: 12.5px;
+  color: rgba(255, 255, 255, 0.65);
+  margin-top: 4px;
 }
 
 /* ---------- Add order form ---------- */
