@@ -51,6 +51,9 @@ function Login() {
         {loginMutation.isError && (
           <p className="auth-error">Wrong email or password.</p>
         )}
+        <p style={{ fontSize: 13, marginTop: 10, textAlign: "center" }}>
+          <Link to="/forgot-password">Forgot password?</Link>
+        </p>
         <p style={{ fontSize: 13, marginTop: 14, textAlign: "center" }}>
           Don't have an account? <Link to="/register">Sign up</Link>
         </p>
