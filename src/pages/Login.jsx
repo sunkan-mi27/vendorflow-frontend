@@ -40,8 +40,12 @@ function Login() {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        <button className="btn-primary" type="submit">
-          Log in
+        <button
+          className="btn-primary"
+          type="submit"
+          disabled={loginMutation.isPending}
+        >
+          {loginMutation.isPending ? "Logging in..." : "Log in"}
         </button>
         {loginMutation.isError && (
           <p className="auth-error">Wrong email or password.</p>

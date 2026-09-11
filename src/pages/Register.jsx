@@ -55,8 +55,12 @@ function Register() {
           onChange={handleChange}
           required
         />
-        <button className="btn-primary" type="submit">
-          Sign up
+        <button
+          className="btn-primary"
+          type="submit"
+          disabled={registerMutation.isPending}
+        >
+          {registerMutation.isPending ? "Creating account..." : "Sign up"}
         </button>
         {registerMutation.isError && (
           <p className="auth-error">
