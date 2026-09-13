@@ -14,6 +14,7 @@ function Login() {
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("vendorEmail", response.data.vendor.email);
       navigate("/dashboard");
+      localStorage.setItem('businessName', response.data.vendor.businessName)
     },
   });
 

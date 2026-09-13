@@ -97,9 +97,10 @@ function Dashboard() {
     <div className="app-shell">
       <div className="header-row">
         <div>
-          <h1 className="brand">VendorFlow</h1>
+          <h1 className="brand">{localStorage.getItem("businessName")}</h1>
           <p className="brand-sub">
-            Order tracking, without losing anyone in the chat.
+            Order tracking, without losing anyone in the chat.Powered by
+            VendorFlow
           </p>
         </div>
         <button className="btn-ghost" onClick={handleLogout}>
