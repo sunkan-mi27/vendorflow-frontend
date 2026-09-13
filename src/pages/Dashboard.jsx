@@ -131,9 +131,7 @@ function Dashboard() {
     <div className="app-shell">
       <div className="header-row">
         <div>
-          <h1 className="brand">
-            {localStorage.getItem("businessName") || "VendorFlow"}
-          </h1>
+          <h1 className="brand">{localStorage.getItem("businessName")}</h1>
           <p className="brand-sub">Powered by VendorFlow</p>
         </div>
         <div style={{ display: "flex", gap: 8 }}>
