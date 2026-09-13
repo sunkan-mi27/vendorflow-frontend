@@ -4,21 +4,21 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "../api/axios";
 
 const motivations = [
-  "Every order today is a step closer to the business you're building.",
-  "Small hustle now, big empire later. Keep going.",
-  "You didn't come this far to stop here.",
-  "Consistency beats motivation. Show up today.",
-  "Your customers remember who never let them down.",
-  "Rough days build the businesses that last.",
-  "One more order today. That's the whole game.",
+  "Every order today is a step closer to the business you're building..DONT STOP!!!",
+  "Small hustle now, big empire later. Keep going if you do bilieve in yourself....",
+  "You didn't come this far to stop here...Remember why you started.",
+  "Consistency beats motivation. Show up today. Show up tomorrow. Show up Every blessed DAYYYYY",
+  "Your customers remember who never let them down..Keep satisfying their NEEDS not WANTS....Best of Luck",
+  "Rough days build the businesses that last...Why you wanna stop?",
+  "One more order today. That's the whole game..Play it right.",
   "Nobody sees the late nights. They see the results.",
-  "You're not just selling. You're building a name.",
-  "Champions track their numbers. You're already ahead.",
-  "The grind is quiet, but the results won't be.",
-  "Today's sales are tomorrow's proof you never gave up.",
-  "Discipline today. Freedom tomorrow.",
-  "Every 'yes' from a customer is a vote of trust. Earn it again today.",
-  "You're not behind. You're building.",
+  "You're not just selling. You're building a name. Keep Pushing, Keep Praying and keep the Positive Energyyyy",
+  "Champions track their numbers. You're already ahead CHAMPS🏆.",
+  "The grind is quiet, but the results won't be. Remember Never to stop. Fuel your Engine",
+  "Today's sales are tomorrow's proof you never gave up. You got a real Story to tell....",
+  "Discipline today. Freedom tomorrow. Proud of yourself in Future",
+  "Every 'yes' from a customer is a vote of trust. Earn it again today. Dont stop earning their TRUST",
+  "You're not behind dont think so. You're building a better LifePlan.",
 ];
 
 function Dashboard() {
