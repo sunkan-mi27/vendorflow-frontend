@@ -1,22 +1,24 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "../api/axios";
 
 function Dashboard() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    navigate("/login");
-  };
   const [showUpgrade, setShowUpgrade] = useState(false);
+  const [showManage, setShowManage] = useState(false);
   const [form, setForm] = useState({
     customerName: "",
     customerPhone: "",
     item: "",
     amount: "",
   });
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/login");
+  };
 
   const {
     data: orders,
@@ -53,6 +55,21 @@ function Dashboard() {
     },
   });
 
+  const resetSummaryMutation = useMutation({
+    mutationFn: () => api.post("/orders/reset-summary"),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["summary"] });
+    },
+  });
+
+  const archiveMutation = useMutation({
+    mutationFn: (status) => api.post("/orders/archive", { status }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["orders"] });
+      setShowManage(false);
+    },
+  });
+
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
@@ -61,11 +78,28 @@ function Dashboard() {
     addOrderMutation.mutate(form);
   };
 
+  const handleReset = () => {
+    if (window.confirm("Reset your order count and total back to zero?")) {
+      resetSummaryMutation.mutate();
+    }
+  };
+
+  const handleArchive = (status) => {
+    const labels = {
+      all: "all orders",
+      paid: "paid orders",
+      shipped: "shipped orders",
+    };
+    if (window.confirm(`Move ${labels[status]} to your Sales History?`)) {
+      archiveMutation.mutate(status);
+    }
+  };
+
   const handleUpgrade = () => {
     const email = localStorage.getItem("vendorEmail");
 
     const handler = window.PaystackPop.setup({
-      key: "pk_test_f1eae695bf442c9dffff788d12aba0789f4134d6",
+      key: "pk_test_YOUR_PUBLIC_KEY_HERE",
       email: email,
       amount: 250000,
       currency: "NGN",
@@ -97,27 +131,38 @@ function Dashboard() {
     <div className="app-shell">
       <div className="header-row">
         <div>
-          <h1 className="brand">{localStorage.getItem("businessName")}</h1>
-          <p className="brand-sub">
-            Order tracking, without losing anyone in the chat.Powered by
-            VendorFlow
-          </p>
+          <h1 className="brand">
+            {localStorage.getItem("businessName") || "VendorFlow"}
+          </h1>
+          <p className="brand-sub">Powered by VendorFlow</p>
         </div>
-        <button className="btn-ghost" onClick={handleLogout}>
-          Log out
-        </button>
+        <div style={{ display: "flex", gap: 8 }}>
+          <Link className="btn-ghost" to="/history">
+            Sales History
+          </Link>
+          <button className="btn-ghost" onClick={handleLogout}>
+            Log out
+          </button>
+        </div>
       </div>
 
       {summary && (
         <div className="summary-strip">
           <div className="summary-item">
             <div className="value">{summary.count}</div>
-            <div className="label">Orders today</div>
+            <div className="label">Orders</div>
           </div>
           <div className="summary-item">
             <div className="value">₦{summary.total.toLocaleString()}</div>
-            <div className="label">Total today</div>
+            <div className="label">Total</div>
           </div>
+          <button
+            className="btn-reset"
+            onClick={handleReset}
+            title="Reset counter to zero"
+          >
+            ↻ Reset
+          </button>
         </div>
       )}
 
@@ -157,6 +202,27 @@ function Dashboard() {
           </button>
         </form>
       )}
+
+      <div className="list-header">
+        <span className="list-title">Active Orders</span>
+        <div className="manage-wrapper">
+          <button
+            className="btn-ghost"
+            onClick={() => setShowManage(!showManage)}
+          >
+            Manage ▾
+          </button>
+          {showManage && (
+            <div className="manage-menu">
+              <button onClick={() => handleArchive("paid")}>Clear paid</button>
+              <button onClick={() => handleArchive("shipped")}>
+                Clear shipped
+              </button>
+              <button onClick={() => handleArchive("all")}>Clear all</button>
+            </div>
+          )}
+        </div>
+      </div>
 
       {orders.length === 0 ? (
         <div className="empty-state">
@@ -226,7 +292,7 @@ function Dashboard() {
             orders.
           </p>
           <button className="btn-primary" onClick={handleUpgrade}>
-            Upgrade now ⇢ ₦2,500/month
+            Upgrade now — ₦2,500/month
           </button>
         </div>
       )}
