@@ -120,7 +120,7 @@ function Dashboard() {
     const email = localStorage.getItem("vendorEmail");
 
     const handler = window.PaystackPop.setup({
-      key: "pk_test_f1eae695bf442c9dffff788d12aba0789f4134d6",
+      key: "pk_live_d5b0c4d47269c3d96b948de6eac35c9b18469219",
       email: email,
       amount: 250000,
       currency: "NGN",
