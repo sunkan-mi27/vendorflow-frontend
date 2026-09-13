@@ -62,11 +62,16 @@ body {
 
 .summary-strip {
   display: flex;
-  background: var(--ink);
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  background: linear-gradient(135deg, var(--ink) 0%, #14213d 100%);
   border-radius: var(--radius);
   padding: 22px 26px;
   margin-bottom: 28px;
   color: white;
+  position: relative;
+  overflow: hidden;
 }
 
 .summary-item {
@@ -421,7 +426,6 @@ input[type="number"] {
   padding: 8px 14px;
   cursor: pointer;
   align-self: center;
-  margin-left: 4px;
 }
 
 .btn-reset:hover {
@@ -473,4 +477,11 @@ input[type="number"] {
 
 .manage-menu button:hover {
   background: var(--bg);
+}
+
+.motivation {
+  font-size: 13px;
+  font-style: italic;
+  color: var(--gold);
+  margin: 0 0 20px;
 }

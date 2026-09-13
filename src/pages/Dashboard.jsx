@@ -3,11 +3,32 @@ import { useNavigate, Link } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "../api/axios";
 
+const motivations = [
+  "Every order today is a step closer to the business you're building.",
+  "Small hustle now, big empire later. Keep going.",
+  "You didn't come this far to stop here.",
+  "Consistency beats motivation. Show up today.",
+  "Your customers remember who never let them down.",
+  "Rough days build the businesses that last.",
+  "One more order today. That's the whole game.",
+  "Nobody sees the late nights. They see the results.",
+  "You're not just selling. You're building a name.",
+  "Champions track their numbers. You're already ahead.",
+  "The grind is quiet, but the results won't be.",
+  "Today's sales are tomorrow's proof you never gave up.",
+  "Discipline today. Freedom tomorrow.",
+  "Every 'yes' from a customer is a vote of trust. Earn it again today.",
+  "You're not behind. You're building.",
+];
+
 function Dashboard() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [showUpgrade, setShowUpgrade] = useState(false);
   const [showManage, setShowManage] = useState(false);
+  const [motivation] = useState(
+    motivations[Math.floor(Math.random() * motivations.length)],
+  );
   const [form, setForm] = useState({
     customerName: "",
     customerPhone: "",
@@ -99,7 +120,7 @@ function Dashboard() {
     const email = localStorage.getItem("vendorEmail");
 
     const handler = window.PaystackPop.setup({
-      key: "pk_test_YOUR_PUBLIC_KEY_HERE",
+      key: "pk_test_f1eae695bf442c9dffff788d12aba0789f4134d6",
       email: email,
       amount: 250000,
       currency: "NGN",
@@ -131,8 +152,11 @@ function Dashboard() {
     <div className="app-shell">
       <div className="header-row">
         <div>
-          <h1 className="brand">{localStorage.getItem("businessName")}</h1>
+          <h1 className="brand">
+            {localStorage.getItem("businessName") || "VendorFlow"}
+          </h1>
           <p className="brand-sub">Powered by VendorFlow</p>
+          <p className="motivation">{motivation}</p>
         </div>
         <div style={{ display: "flex", gap: 8 }}>
           <Link className="btn-ghost" to="/history">
