@@ -485,3 +485,178 @@ input[type="number"] {
   color: var(--gold);
   margin: 0 0 20px;
 }
+/* ---------- Landing page ---------- */
+.landing {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.landing-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 0;
+}
+
+.landing-logo {
+  font-family: "Playfair Display", serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.landing-nav-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.hero {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  padding: 60px 0;
+  flex-wrap: wrap;
+}
+
+.hero-text {
+  flex: 1;
+  min-width: 280px;
+}
+
+.hero-title {
+  font-family: "Playfair Display", serif;
+  font-size: 40px;
+  line-height: 1.2;
+  color: var(--ink);
+  margin: 0 0 18px;
+}
+
+.hero-sub {
+  font-size: 16px;
+  color: var(--ink-soft);
+  line-height: 1.6;
+  margin: 0 0 28px;
+  max-width: 440px;
+}
+
+.hero-cta {
+  font-size: 15px;
+  padding: 14px 28px;
+}
+
+.hero-image-wrap {
+  flex: 1;
+  min-width: 280px;
+  display: flex;
+  justify-content: center;
+}
+
+.hero-image {
+  max-width: 100%;
+  border-radius: var(--radius);
+  box-shadow: 0 12px 40px rgba(27, 42, 74, 0.15);
+}
+
+.platform-section {
+  text-align: center;
+  padding: 40px 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.platform-label {
+  font-size: 13px;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin: 0 0 24px;
+}
+
+.platform-row {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.platform-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: var(--ink-soft);
+}
+
+.platform-icon svg {
+  width: 28px;
+  height: 28px;
+  color: var(--ink);
+}
+
+.platform-icon span {
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  padding: 60px 0;
+}
+
+.feature-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px 22px;
+  text-align: center;
+}
+
+.feature-icon {
+  font-size: 28px;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.feature-card h3 {
+  font-size: 16px;
+  margin: 0 0 8px;
+  color: var(--ink);
+}
+
+.feature-card p {
+  font-size: 13.5px;
+  color: var(--ink-soft);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.landing-cta-final {
+  text-align: center;
+  padding: 60px 0;
+}
+
+.landing-cta-final h2 {
+  font-family: "Playfair Display", serif;
+  font-size: 26px;
+  color: var(--ink);
+  margin: 0 0 24px;
+}
+
+.landing-footer {
+  text-align: center;
+  padding: 24px 0 40px;
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+
+@media (max-width: 640px) {
+  .hero-title {
+    font-size: 28px;
+  }
+  .feature-grid {
+    grid-template-columns: 1fr;
+  }
+}
