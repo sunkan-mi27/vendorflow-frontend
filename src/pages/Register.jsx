@@ -1,13 +1,26 @@
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, useSearchParams, Link } from "react-router-dom";
 import api from "../api/axios";
 
+const platformLabels = {
+  whatsapp: "WhatsApp",
+  instagram: "Instagram",
+  tiktok: "TikTok",
+  twitter: "Twitter/X",
+};
+
 function Register() {
+  const [searchParams] = useSearchParams();
+  const initialPlatform = searchParams.get("platform") || "whatsapp";
+
+  const [platform, setPlatform] = useState(initialPlatform);
   const [form, setForm] = useState({
     businessName: "",
     email: "",
     password: "",
+    phone: "",
+    handle: "",
   });
   const navigate = useNavigate();
 
@@ -16,6 +29,7 @@ function Register() {
     onSuccess: (response) => {
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("vendorEmail", response.data.vendor.email);
+      localStorage.setItem("businessName", response.data.vendor.businessName);
       navigate("/dashboard");
     },
   });
@@ -25,14 +39,35 @@ function Register() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    registerMutation.mutate(form);
+    registerMutation.mutate({
+      businessName: form.businessName,
+      email: form.email,
+      password: form.password,
+      platform,
+      phone: platform === "whatsapp" ? form.phone : undefined,
+      handle: platform !== "whatsapp" ? form.handle : undefined,
+    });
   };
 
   return (
     <div className="auth-screen">
       <form className="auth-card" onSubmit={handleSubmit}>
         <h2>Create your account</h2>
-        <p>Start tracking your orders in minutes.</p>
+        <p>Signing up with {platformLabels[platform]}</p>
+
+        <div className="platform-picker">
+          {Object.keys(platformLabels).map((key) => (
+            <button
+              key={key}
+              type="button"
+              className={`platform-pill ${platform === key ? "active" : ""}`}
+              onClick={() => setPlatform(key)}
+            >
+              {platformLabels[key]}
+            </button>
+          ))}
+        </div>
+
         <input
           name="businessName"
           placeholder="Business name"
@@ -48,6 +83,25 @@ function Register() {
           onChange={handleChange}
           required
         />
+
+        {platform === "whatsapp" ? (
+          <input
+            name="phone"
+            placeholder="WhatsApp number (2348...)"
+            value={form.phone}
+            onChange={handleChange}
+            required
+          />
+        ) : (
+          <input
+            name="handle"
+            placeholder={`${platformLabels[platform]} handle (without @)`}
+            value={form.handle}
+            onChange={handleChange}
+            required
+          />
+        )}
+
         <input
           name="password"
           type="password"
