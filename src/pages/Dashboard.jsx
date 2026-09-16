@@ -21,9 +21,42 @@ const motivations = [
   "You're not behind dont think so. You're building a better LifePlan.",
 ];
 
+const platformConfig = {
+  whatsapp: {
+    label: "WhatsApp",
+    placeholder: "Phone (2348...)",
+    buildLink: (contact, order) =>
+      `https://wa.me/${contact}?text=${encodeURIComponent(
+        `Hi ${order.customerName}, your order for ${order.item} is now ${order.status}.`,
+      )}`,
+    buttonLabel: "WhatsApp →",
+  },
+  instagram: {
+    label: "Instagram",
+    placeholder: "Instagram handle (without @)",
+    buildLink: (contact) => `https://instagram.com/${contact}`,
+    buttonLabel: "Instagram →",
+  },
+  tiktok: {
+    label: "TikTok",
+    placeholder: "TikTok handle (without @)",
+    buildLink: (contact) => `https://tiktok.com/@${contact}`,
+    buttonLabel: "TikTok →",
+  },
+  twitter: {
+    label: "Twitter/X",
+    placeholder: "Twitter/X handle (without @)",
+    buildLink: (contact) => `https://x.com/${contact}`,
+    buttonLabel: "Twitter/X →",
+  },
+};
+
 function Dashboard() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+  const vendorPlatform = localStorage.getItem("vendorPlatform") || "whatsapp";
+  const config = platformConfig[vendorPlatform] || platformConfig.whatsapp;
+
   const [showUpgrade, setShowUpgrade] = useState(false);
   const [showManage, setShowManage] = useState(false);
   const [motivation] = useState(
@@ -199,7 +232,7 @@ function Dashboard() {
           />
           <input
             name="customerPhone"
-            placeholder="Phone (2348...)"
+            placeholder={config.placeholder}
             value={form.customerPhone}
             onChange={handleChange}
             required
@@ -291,15 +324,14 @@ function Dashboard() {
                     Mark shipped
                   </button>
                 )}
+
                 <a
                   className="btn-whatsapp"
-                  href={`https://wa.me/${order.customerPhone}?text=${encodeURIComponent(
-                    `Hi ${order.customerName}, your order for ${order.item} is now ${order.status}.`,
-                  )}`}
+                  href={config.buildLink(order.customerPhone, order)}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  WhatsApp →
+                  {config.buttonLabel}
                 </a>
               </div>
             </div>

@@ -30,6 +30,11 @@ function Register() {
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("vendorEmail", response.data.vendor.email);
       localStorage.setItem("businessName", response.data.vendor.businessName);
+      localStorage.setItem(
+        "vendorPlatform",
+        response.data.vendor.platform || "whatsapp",
+      );
+      localStorage.setItem("vendorHandle", response.data.vendor.handle || "");
       navigate("/dashboard");
     },
   });

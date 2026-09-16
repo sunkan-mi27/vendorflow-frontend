@@ -14,7 +14,12 @@ function Login() {
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("vendorEmail", response.data.vendor.email);
       navigate("/dashboard");
-      localStorage.setItem('businessName', response.data.vendor.businessName)
+      localStorage.setItem("businessName", response.data.vendor.businessName);
+      localStorage.setItem(
+        "vendorPlatform",
+        response.data.vendor.platform || "whatsapp",
+      );
+      localStorage.setItem("vendorHandle", response.data.vendor.handle || "");
     },
   });
 
@@ -52,9 +57,9 @@ function Login() {
         {loginMutation.isError && (
           <p className="auth-error">Wrong email or password.</p>
         )}
-        <p style={{ fontSize: 13, marginTop: 10, textAlign: "center" }}>
+        {/* <p style={{ fontSize: 13, marginTop: 10, textAlign: "center" }}>
           <Link to="/forgot-password">Forgot password?</Link>
-        </p>
+        </p> */}
         <p style={{ fontSize: 13, marginTop: 14, textAlign: "center" }}>
           Don't have an account? <Link to="/register">Sign up</Link>
         </p>
