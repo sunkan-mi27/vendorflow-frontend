@@ -21,33 +21,34 @@ const motivations = [
   "You're not behind dont think so. You're building a better LifePlan.",
 ];
 
+const getMessage = (order, businessName) => {
+  const templates = {
+    pending: `Hi ${order.customerName}! This is ${businessName} 🌟 We've received your order for ${order.item} and will update you once it's confirmed. Thank you for shopping with us!`,
+    paid: `Hi ${order.customerName}! This is ${businessName} ✅ Your payment for ${order.item} has been confirmed. We're preparing your order now — thank you!`,
+    shipped: `Hi ${order.customerName}! This is ${businessName} 📦 Good news — your order for ${order.item} has been shipped and is on its way. We appreciate you!`,
+  };
+  return templates[order.status] || templates.pending;
+};
+
 const platformConfig = {
   whatsapp: {
-    label: "WhatsApp",
     placeholder: "Phone (2348...)",
-    buildLink: (contact, order) =>
-      `https://wa.me/${contact}?text=${encodeURIComponent(
-        `Hi ${order.customerName}, your order for ${order.item} is now ${order.status}.`,
-      )}`,
     buttonLabel: "WhatsApp →",
   },
   instagram: {
-    label: "Instagram",
     placeholder: "Instagram handle (without @)",
-    buildLink: (contact) => `https://instagram.com/${contact}`,
     buttonLabel: "Instagram →",
+    profileUrl: (contact) => `https://instagram.com/${contact}`,
   },
   tiktok: {
-    label: "TikTok",
     placeholder: "TikTok handle (without @)",
-    buildLink: (contact) => `https://tiktok.com/@${contact}`,
     buttonLabel: "TikTok →",
+    profileUrl: (contact) => `https://tiktok.com/@${contact}`,
   },
   twitter: {
-    label: "Twitter/X",
     placeholder: "Twitter/X handle (without @)",
-    buildLink: (contact) => `https://x.com/${contact}`,
     buttonLabel: "Twitter/X →",
+    profileUrl: (contact) => `https://x.com/${contact}`,
   },
 };
 
@@ -146,6 +147,23 @@ function Dashboard() {
     };
     if (window.confirm(`Move ${labels[status]} to your Sales History?`)) {
       archiveMutation.mutate(status);
+    }
+  };
+
+  const handleFollowUp = (order) => {
+    const businessName = localStorage.getItem("businessName") || "Us";
+    const message = getMessage(order, businessName);
+
+    if (vendorPlatform === "whatsapp") {
+      window.open(
+        `https://wa.me/${order.customerPhone}?text=${encodeURIComponent(message)}`,
+        "_blank",
+      );
+    } else {
+      navigator.clipboard.writeText(message).then(() => {
+        alert("Message copied! Paste it when their chat opens.");
+        window.open(config.profileUrl(order.customerPhone), "_blank");
+      });
     }
   };
 
@@ -324,15 +342,12 @@ function Dashboard() {
                     Mark shipped
                   </button>
                 )}
-
-                <a
+                <button
                   className="btn-whatsapp"
-                  href={config.buildLink(order.customerPhone, order)}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  onClick={() => handleFollowUp(order)}
                 >
                   {config.buttonLabel}
-                </a>
+                </button>
               </div>
             </div>
           ))}
