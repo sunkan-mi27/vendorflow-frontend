@@ -21,6 +21,7 @@ const motivations = [
   "You're not behind dont think so. You're building a better LifePlan.",
 ];
 
+
 const getMessage = (order, businessName) => {
   const templates = {
     pending: `Hi ${order.customerName}! This is ${businessName} 🌟 We've received your order for ${order.item} and will update you once it's confirmed. Thank you for shopping with us!`,
@@ -32,20 +33,24 @@ const getMessage = (order, businessName) => {
 
 const platformConfig = {
   whatsapp: {
+    label: "WhatsApp",
     placeholder: "Phone (2348...)",
     buttonLabel: "WhatsApp →",
   },
   instagram: {
+    label: "Instagram",
     placeholder: "Instagram handle (without @)",
     buttonLabel: "Instagram →",
     profileUrl: (contact) => `https://instagram.com/${contact}`,
   },
   tiktok: {
+    label: "TikTok",
     placeholder: "TikTok handle (without @)",
     buttonLabel: "TikTok →",
     profileUrl: (contact) => `https://tiktok.com/@${contact}`,
   },
   twitter: {
+    label: "Twitter/X",
     placeholder: "Twitter/X handle (without @)",
     buttonLabel: "Twitter/X →",
     profileUrl: (contact) => `https://x.com/${contact}`,
@@ -55,19 +60,19 @@ const platformConfig = {
 function Dashboard() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-  const vendorPlatform = localStorage.getItem("vendorPlatform") || "whatsapp";
-  const config = platformConfig[vendorPlatform] || platformConfig.whatsapp;
+  const defaultPlatform = localStorage.getItem("vendorPlatform") || "whatsapp";
 
   const [showUpgrade, setShowUpgrade] = useState(false);
   const [showManage, setShowManage] = useState(false);
   const [motivation] = useState(
-    motivations[Math.floor(Math.random() * motivations.length)],
+    motivations[Math.floor(Math.random() * motivations.length)]
   );
   const [form, setForm] = useState({
     customerName: "",
     customerPhone: "",
     item: "",
     amount: "",
+    platform: defaultPlatform,
   });
 
   const handleLogout = () => {
@@ -94,7 +99,13 @@ function Dashboard() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["orders"] });
       queryClient.invalidateQueries({ queryKey: ["summary"] });
-      setForm({ customerName: "", customerPhone: "", item: "", amount: "" });
+      setForm({
+        customerName: "",
+        customerPhone: "",
+        item: "",
+        amount: "",
+        platform: defaultPlatform,
+      });
     },
     onError: (error) => {
       if (error?.response?.data?.code === "UPGRADE_REQUIRED") {
@@ -153,16 +164,18 @@ function Dashboard() {
   const handleFollowUp = (order) => {
     const businessName = localStorage.getItem("businessName") || "Us";
     const message = getMessage(order, businessName);
+    const orderPlatform = order.platform || "whatsapp";
+    const orderConfig = platformConfig[orderPlatform] || platformConfig.whatsapp;
 
-    if (vendorPlatform === "whatsapp") {
+    if (orderPlatform === "whatsapp") {
       window.open(
         `https://wa.me/${order.customerPhone}?text=${encodeURIComponent(message)}`,
-        "_blank",
+        "_blank"
       );
     } else {
       navigator.clipboard.writeText(message).then(() => {
         alert("Message copied! Paste it when their chat opens.");
-        window.open(config.profileUrl(order.customerPhone), "_blank");
+        window.open(orderConfig.profileUrl(order.customerPhone), "_blank");
       });
     }
   };
@@ -197,7 +210,11 @@ function Dashboard() {
 
   if (isLoading) return <p style={{ padding: 40 }}>Loading orders...</p>;
   if (isError)
-    return <p style={{ padding: 40 }}>Something went wrong fetching orders.</p>;
+    return (
+      <p style={{ padding: 40 }}>Something went wrong fetching orders.</p>
+    );
+
+  const currentConfig = platformConfig[form.platform] || platformConfig.whatsapp;
 
   return (
     <div className="app-shell">
@@ -241,6 +258,18 @@ function Dashboard() {
 
       {!showUpgrade && (
         <form className="order-form" onSubmit={handleSubmit}>
+          <div className="platform-picker" style={{ marginBottom: 10 }}>
+            {Object.keys(platformConfig).map((key) => (
+              <button
+                key={key}
+                type="button"
+                className={`platform-pill ${form.platform === key ? "active" : ""}`}
+                onClick={() => setForm({ ...form, platform: key })}
+              >
+                {platformConfig[key].label}
+              </button>
+            ))}
+          </div>
           <input
             name="customerName"
             placeholder="Customer name"
@@ -250,7 +279,7 @@ function Dashboard() {
           />
           <input
             name="customerPhone"
-            placeholder={config.placeholder}
+            placeholder={currentConfig.placeholder}
             value={form.customerPhone}
             onChange={handleChange}
             required
@@ -287,7 +316,9 @@ function Dashboard() {
           </button>
           {showManage && (
             <div className="manage-menu">
-              <button onClick={() => handleArchive("paid")}>Clear paid</button>
+              <button onClick={() => handleArchive("paid")}>
+                Clear paid
+              </button>
               <button onClick={() => handleArchive("shipped")}>
                 Clear shipped
               </button>
@@ -303,62 +334,67 @@ function Dashboard() {
         </div>
       ) : (
         <div className="order-list">
-          {orders.map((order) => (
-            <div className="order-card" key={order.id}>
-              <div className="order-main">
-                <span className="order-customer">{order.customerName}</span>
-                <span className="order-detail">
-                  {order.item} · ₦{order.amount.toLocaleString()}
-                </span>
-              </div>
+          {orders.map((order) => {
+            const orderConfig =
+              platformConfig[order.platform] || platformConfig.whatsapp;
+            return (
+              <div className="order-card" key={order.id}>
+                <div className="order-main">
+                  <span className="order-customer">{order.customerName}</span>
+                  <span className="order-detail">
+                    {order.item} · ₦{order.amount.toLocaleString()} ·{" "}
+                    {orderConfig.label}
+                  </span>
+                </div>
 
-              <div className="order-actions">
-                <span className={`badge badge-${order.status}`}>
-                  {order.status}
-                </span>
-                {order.status !== "paid" && (
+                <div className="order-actions">
+                  <span className={`badge badge-${order.status}`}>
+                    {order.status}
+                  </span>
+                  {order.status !== "paid" && (
+                    <button
+                      className="btn-ghost"
+                      onClick={() =>
+                        updateStatusMutation.mutate({
+                          id: order.id,
+                          status: "paid",
+                        })
+                      }
+                    >
+                      Mark paid
+                    </button>
+                  )}
+                  {order.status !== "shipped" && (
+                    <button
+                      className="btn-ghost"
+                      onClick={() =>
+                        updateStatusMutation.mutate({
+                          id: order.id,
+                          status: "shipped",
+                        })
+                      }
+                    >
+                      Mark shipped
+                    </button>
+                  )}
                   <button
-                    className="btn-ghost"
-                    onClick={() =>
-                      updateStatusMutation.mutate({
-                        id: order.id,
-                        status: "paid",
-                      })
-                    }
+                    className="btn-whatsapp"
+                    onClick={() => handleFollowUp(order)}
                   >
-                    Mark paid
+                    {orderConfig.buttonLabel}
                   </button>
-                )}
-                {order.status !== "shipped" && (
-                  <button
-                    className="btn-ghost"
-                    onClick={() =>
-                      updateStatusMutation.mutate({
-                        id: order.id,
-                        status: "shipped",
-                      })
-                    }
-                  >
-                    Mark shipped
-                  </button>
-                )}
-                <button
-                  className="btn-whatsapp"
-                  onClick={() => handleFollowUp(order)}
-                >
-                  {config.buttonLabel}
-                </button>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
 
       {showUpgrade && (
         <div className="upgrade-banner">
           <p>
-            You've used your 3 free orders. Upgrade to keep tracking unlimited
-            orders.
+            You've used your 3 free orders. Upgrade to keep tracking
+            unlimited orders.
           </p>
           <button className="btn-primary" onClick={handleUpgrade}>
             Upgrade now — ₦2,500/month
